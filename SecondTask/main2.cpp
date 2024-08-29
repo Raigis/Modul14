@@ -36,29 +36,29 @@ bool win (bool BF[][3]) {
     return false;
 }
 
-void change_field(bool BFP[][3], bool BF[][3], char CF[][8], int xy[], int x, int y, char mark){
-    BFP[x][y] = true;
-    BF[x][y] = true;
-    CF[xy[x]][xy[y]] = mark;
+void change_field(bool BFP[][3], bool BF[][3], char CF[][8], int x, int y, char mark){
+    BFP[x-1][y-1] = true;
+    BF[x-1][y-1] = true;
+    CF[x*2][y*2] = mark;
 }
 
 bool is_correct(bool BF[][3], int x, int y) {
-    if(BF[x][y] || x < 0 || x > 2 || y < 0 || y > 2){
+    if(BF[x-1][y-1] || x < 1 || x > 3 || y < 1 || y > 3){
         std::cout << "Incorrect input. Please, try again.\n";
         return true;
     }
     return false;
 }
 
-void play(bool BFP[][3], bool BF[][3],char CF[][8], int xy[], int id){
+void play(bool BFP[][3], bool BF[][3],char CF[][8], int id){
     std::string player = (id == 0 ? "First player" : "Second player");
     char mark = (id == 0 ? 'X' : 'O');
     char x,y;
     do{
         std::cout << player << " turn!\nEnter the coordinates (Left Up):\n";
         std::cin >> x >> y;
-    } while (is_correct(BF, (x - '0') - 1, (y - '0') - 1));
-    change_field(BFP, BF, CF, xy, (x - '0') - 1, (y - '0') - 1, mark);
+    } while (is_correct(BF, x - '0', y - '0'));
+    change_field(BFP, BF, CF, x - '0', y - '0', mark);
 }
 
 int main() {
@@ -81,13 +81,12 @@ int main() {
                        {false, false, false},
                        {false, false, false}};
 
-    int coordinates[3] {2, 4, 6};
     int player;
     int count = 0;
     while(true){
         print(charField);
         player = count % 2;
-        play((player == 0 ? boolFieldFP : boolFieldSP), boolField, charField, coordinates, player);
+        play((player == 0 ? boolFieldFP : boolFieldSP), boolField, charField, player);
         if (count >= 4) {
             if (win(player == 0 ? boolFieldFP : boolFieldSP)) {
                 std::cout << "\033[1J\033[2;2H";
